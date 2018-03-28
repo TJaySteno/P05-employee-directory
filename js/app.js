@@ -193,9 +193,7 @@ $('document').ready(() => {
 
           if (action === 'close'
           || $(e.target).hasClass('modal-close')
-          || $(e.target).hasClass('modal-window')) {
-            $modalWindow.remove();
-            $(window).off('keyup'); }
+          || $(e.target).hasClass('modal-window')) $modalWindow.remove();
 
           else if ($(e.target).hasClass('modal-arrow') || action) {
             const index = Number($('.modal-index').text());
@@ -208,6 +206,7 @@ $('document').ready(() => {
         }
 
         // Set key listener for arrows/esc/enter, set listener for modal window clicks, remove existing modal windows, and display the new one
+        $(window).off('keyup');
         $(window).on('keyup', e => modalArrowPress(e));
         $modalWindow.click(e => modifyModalWindow(e));
         $('.modal-window').remove();
