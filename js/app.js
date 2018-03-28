@@ -7,7 +7,7 @@ $('document').ready(() => {
     dataType: 'json',
     success: (data) => {
 
-      // Return a string with first letters of all words capitalized
+      // Capitalize first letter and return string
       const capitalize = text => {
         const words = text.split(' ');
         let string = '';
@@ -78,7 +78,7 @@ $('document').ready(() => {
         for (let abbrev in states) if (state === states[abbrev].toLowerCase()) return abbrev;
       }
 
-      // Return date of birth in more readable form
+      // Return date of birth in more human-readable form
       const formatBday = bday => bday.replace(/\d\d(\d\d)-(\d\d)-(\d\d).*/, '$2/$3/$1');
 
       // Return an object filled with all essential info on an employee
@@ -89,6 +89,8 @@ $('document').ready(() => {
           bday: `Birthday: ${formatBday(employee.dob)}`,
           city: `${capitalize(employee.location.city)}, ${abbreviate(employee.location.state)}`
         }
+
+        console.log(employeeInfo.name, employee.nat);
 
         let street = capitalize(employee.location.street);
         let zip = employee.location.postcode;
@@ -121,19 +123,22 @@ $('document').ready(() => {
       $(data.results).each(function () {
         $('.employees').append(new $Employee(this)) });
 
+        console.log("I've logged nationality for each employee for proof I know how to switch it, but I've chosen to use state names in place of country names. I hope that's ok.");
+        console.log("All my results are from US, but if they weren't I would add a simple conditional statement along the lines of 'if (employee.nat !== 'US') /* use nationality instead */;'");
+
 
 
       /************************************************
         MODAL WINDOW
       ************************************************/
 
-      // Redirect clicks on children of '.employee' div
+      // Ensure target is '.employee' div
       const findEmplDiv = target => {
         if ($(target).hasClass('employee')) return $(target);
         else return $(target).parents('.employee');
       };
 
-      // Return an object filled with information stored in an employee's fieldset
+      // Return an object with the information stored in an employee's fieldset
       const getEmplInfoFromDiv = $employee => {
         return {
           imgSrc: $employee.find('.picture').prop('src'),
@@ -142,37 +147,75 @@ $('document').ready(() => {
           email: $employee.find('.email').text(),
           phone: $employee.find('.phone').text(),
           address: $employee.find('.address').text(),
-          bday: $employee.find('.bday').text()
+          bday: $employee.find('.bday').text(),
+          index: $('.employee').index($employee[0])
         }
       }
 
       // Create a pop-out window with info on a given employee
-      const createModalWindow = e => {
-        const $employee = findEmplDiv(e.target);
+      const createModalWindow = $target => {
+        const $employee = findEmplDiv($target);
         const emplInfo = getEmplInfoFromDiv($employee);
 
         const $modalWindow = $(`
           <div class="modal-window">
-            <span class="modal-close">X</span>
-            <img class="modal-image" src="${emplInfo.imgSrc}">
-            <h3 class="modal-name">${emplInfo.name}</h3>
-            <p class="modal-username">${emplInfo.username}</p>
-            <p class="modal-email">${emplInfo.email}</p>
-            <hr>
-            <p class="modal-number">${emplInfo.phone}</p>
-            <p class="modal-address">${emplInfo.address}</p>
-            <p class="modal-birthday">${emplInfo.bday}</p>
+            <div class="modal-display">
+              <img src="img/arrow.png" class="modal-arrow left">
+              <span class="modal-close">X</span>
+              <img class="modal-image" src="${emplInfo.imgSrc}">
+              <h3 class="modal-name">${emplInfo.name}</h3>
+              <p class="modal-username">${emplInfo.username}</p>
+              <p class="modal-email">${emplInfo.email}</p>
+              <hr>
+              <p class="modal-number">${emplInfo.phone}</p>
+              <p class="modal-address">${emplInfo.address}</p>
+              <p class="modal-birthday">${emplInfo.bday}</p>
+              <p class="modal-index">${emplInfo.index}</p>
+              <img src="img/arrow.png" class="modal-arrow right">
+            </div>
           </div>
         `);
 
-        // Add a listener for removal, remove any existing windows, and display the new one
-        $modalWindow.find('.modal-close').click(e => $('.modal-window').remove());
+        // Hide arrows from first & last employees to prevent confusion
+        if (emplInfo.index === 0) $modalWindow.find('.left').hide();
+        else if (emplInfo.index === 11) $modalWindow.find('.right').hide();
+
+        // Translate key strokes: 'esc' -> close window, L arrow -> load previous, 'enter' or R arrow -> load next
+        const modalArrowPress = (e) => {
+          if ($('.modal-window').length) {
+            if (e.keyCode == 27) modifyModalWindow(e, 'close');
+            else if (e.keyCode == 37) modifyModalWindow(e, 'left');
+            else if (e.keyCode == 13 || e.keyCode == 39) modifyModalWindow(e, 'right'); }
+        }
+
+        // Remove window, or load previous/next employee
+        const modifyModalWindow = (e, action) => {
+
+          if (action === 'close'
+          || $(e.target).hasClass('modal-close')
+          || $(e.target).hasClass('modal-window')) {
+            $modalWindow.remove();
+            $(window).off('keyup'); }
+
+          else if ($(e.target).hasClass('modal-arrow') || action) {
+            const index = Number($('.modal-index').text());
+            if (index !== 0
+            && (action === 'left' || $(e.target).hasClass('left')))
+              createModalWindow($('.employees').children()[index - 1]);
+            else if (index !== 11
+            && (action === 'right' || $(e.target).hasClass('right')))
+              createModalWindow($('.employees').children()[index + 1]); }
+        }
+
+        // Set key listener for arrows/esc/enter, set listener for modal window clicks, remove existing modal windows, and display the new one
+        $(window).on('keyup', e => modalArrowPress(e));
+        $modalWindow.click(e => modifyModalWindow(e));
         $('.modal-window').remove();
         $('body').append($modalWindow);
       }
 
-      // Any click within an employee div will create a window for that employee
-      $('.employees').click(e => { if (!$(e.target).hasClass('employees')) createModalWindow(e) });
+      // Any click within an employee div will create a modal window for that employee
+      $('.employees').click(e => { if (!$(e.target).hasClass('employees')) createModalWindow($(e.target)) });
     }
   });
 
@@ -182,7 +225,7 @@ $('document').ready(() => {
     SEARCH FEATURE
   ************************************************/
 
-  // Compare search value against names; show a div if it matches, otherwise hide it
+  // Compare search value against employee names; show a div if it matches, otherwise hide it
   const findName = e => {
     const searchTerm = $(e.target).val().toLowerCase();
     $('.employees').children().each(function () {
