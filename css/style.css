@@ -16,24 +16,23 @@ body {
       font-size: 1em;
       font-weight: 550;
       color: #777;
+      text-align: center;
 
       margin: 0 10px;
-      display: inline-block;
       margin-bottom: 20px; }
 
     input {
       text-align: center;
 
       padding: 1px;
-      margin: 0 10px;
+      margin: 10px auto;
       height: 1em;
-      width: 20em;
-      float: right;
+      width: 100%;
 
+      display: block;
       outline: none;
       border: solid 1px #777;
-      border-radius: 5px;
-      display: inline-block; }
+      border-radius: 5px; }
       input:hover, input:focus {
         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,.5);
         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,.5);
@@ -173,13 +172,16 @@ body {
   .modal-index {
     display: none; }
 
+@media (min-width: 600px) {
+  input {
+    margin: 10px auto;
+    width: 20em; } }
 
-@media (max-width: 900px) {
+@media (min-width: 900px) {
   h1 {
-    text-align: center; }
+    text-align: left; }
   input {
     margin: auto;
-  }
+    float: right; }
   h1, input {
-    margin-bottom: 10px;
-    display: block; } }
+    display: inline-block; } }
