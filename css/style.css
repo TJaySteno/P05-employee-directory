@@ -3,10 +3,13 @@
 body {
   font-family: sans-serif;
 
-  padding: 20px 40px; }
+  max-width: 1500px;
+  padding: 20px 40px;
+  margin: auto; }
 
   header {
     width: 85%;
+    margin: auto;
   }
 
     h1 {
@@ -63,6 +66,7 @@ body {
   width: 100%;
 
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   grid-gap: 25px 30px; }
 
@@ -168,3 +172,14 @@ body {
 
   .modal-index {
     display: none; }
+
+
+@media (max-width: 900px) {
+  h1 {
+    text-align: center; }
+  input {
+    margin: auto;
+  }
+  h1, input {
+    margin-bottom: 10px;
+    display: block; } }
