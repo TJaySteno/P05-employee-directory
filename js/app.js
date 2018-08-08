@@ -86,7 +86,7 @@ $('document').ready(() => {
         const employeeInfo = {
           name: capitalize(`${employee.name.first} ${employee.name.last}`),
           phone: employee.phone.replace(/-/, ' '),
-          bday: `Birthday: ${formatBday(employee.dob)}`,
+          bday: `Birthday: ${formatBday(String(employee.dob))}`,
           city: `${capitalize(employee.location.city)}, ${abbreviate(employee.location.state)}`
         }
 
