@@ -10,6 +10,7 @@ $('document').ready(() => {
       /* Capitalize first letter and return string */
       const capitalize = text => {
         const words = text.split(' ');
+        let _this = this;
         let string = '';
         $(words).each(function (i) {
           let _this = this;
