@@ -82,7 +82,10 @@ $('document').ready(() => {
           WI: 'Wisconsin',
           WY: 'Wyoming',
         };
-        for (let abbrev in states) if (state === states[abbrev].toLowerCase()) return abbrev;
+
+        for (let abbrev in states) {
+          if (state === states[abbrev]) return abbrev;
+        }
       };
 
       /* Return date of birth in more human-readable form */
