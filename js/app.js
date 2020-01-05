@@ -12,12 +12,13 @@ $('document').ready(() => {
         const words = text.split(' ');
         let string = '';
         $(words).each(function (i) {
+          let _this = this;
           if (/[a-z]/.test(this.charAt(0))) {
             string += this.replace(
               this.charAt(0),
               this.charAt(0).toUpperCase());
           } else {
-            string += this;
+            string += _this;
           }
 
           if (i !== words.length - 1) string += ' ';
