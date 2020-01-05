@@ -16,7 +16,7 @@ $('document').ready(() => {
             string += this.replace(
               this.charAt(0),
               this.charAt(0).toUpperCase());
-          } else string += _this;
+          } else string += this;
 
           if (i !== words.length - 1) string += ' ';
         });
@@ -87,7 +87,6 @@ $('document').ready(() => {
 
       /* Return an object filled with all essential info on an employee */
       const getEmployeeInfo = employee => {
-        console.log(employee, employee.name.first);
         const employeeInfo = {
           name: capitalize(`${employee.name.first} ${employee.name.last}`),
           phone: employee.phone.replace(/-/, ' '),
@@ -97,7 +96,7 @@ $('document').ready(() => {
 
         console.log(employeeInfo.name, employee.nat);
 
-        let street = capitalize(employee.location.street);
+        let street = capitalize(employee.location.street.name);
         let zip = employee.location.postcode;
         employeeInfo.address = `${street}, ${employeeInfo.city}  ${zip}`;
 
