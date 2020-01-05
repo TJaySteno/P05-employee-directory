@@ -16,7 +16,9 @@ $('document').ready(() => {
             string += this.replace(
               this.charAt(0),
               this.charAt(0).toUpperCase());
-          } else string += this;
+          } else {
+            string += this;
+          }
 
           if (i !== words.length - 1) string += ' ';
         });
@@ -94,8 +96,6 @@ $('document').ready(() => {
           city: `${capitalize(employee.location.city)}, ${abbreviate(employee.location.state)}`,
         };
 
-        console.log(employeeInfo.name, employee.nat);
-
         let street = capitalize(employee.location.street.name);
         let zip = employee.location.postcode;
         employeeInfo.address = `${street}, ${employeeInfo.city}  ${zip}`;
@@ -128,12 +128,6 @@ $('document').ready(() => {
         $('.employees').append(new $Employee(this));
       });
 
-      console.log('I\'ve logged nationality for each employee for proof I know how to switch it.');
-      console.log('I\'ve chosen to use state names in place of country names. I hope that\'s ok.');
-      console.log('All my results are from US, but if they weren\'t I would add a simple');
-      console.log('conditional statement along the lines of "if (employee.nat !== \'US\') /* use');
-      console.log('nationality instead */;\'');
-
       /************************************************
         MODAL WINDOW
       ************************************************/
@@ -145,8 +139,8 @@ $('document').ready(() => {
       };
 
       /* Return an object with the information stored in an employee's fieldset */
-      const getEmplInfoFromDiv = $employee => {
-        return {
+      const getEmplInfoFromDiv = $employee =>
+        ({
           imgSrc: $employee.find('.picture').prop('src'),
           name: $employee.find('.name').text(),
           username: $employee.find('.username').text(),
@@ -155,8 +149,7 @@ $('document').ready(() => {
           address: $employee.find('.address').text(),
           bday: $employee.find('.bday').text(),
           index: $('.employee').index($employee[0]),
-        };
-      };
+        });
 
       /* Create a pop-out window with info on a given employee */
       const createModalWindow = $target => {
